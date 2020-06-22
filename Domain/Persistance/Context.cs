@@ -14,5 +14,15 @@ namespace Domain.Persistance
         {
             optionsBuilder.UseInMemoryDatabase("InMemory");
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    UserName = "gen",
+                    Password = "test",
+                    Id = Guid.NewGuid()
+                });
+        }
     }
 }

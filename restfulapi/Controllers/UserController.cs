@@ -35,7 +35,7 @@ namespace restfulapi.Controllers
                 {
                     results.Message = "Invalid userid";
                     results.Success = false;
-                    return BadRequest(new JsonResult(results));
+                    return BadRequest(results);
                 }
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace restfulapi.Controllers
                 {
                     results.Message = "Invalid username or password";
                     results.Success = false;
-                    return BadRequest(new JsonResult(results));
+                    return BadRequest(results);
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(new JsonResult(results));
+            return Ok(results);
         }
         [HttpGet("login/username={username}&password={password}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -83,7 +83,7 @@ namespace restfulapi.Controllers
                 {
                     results.Message = "Invalid username or password";
                     results.Success = false;
-                    return BadRequest(new JsonResult(results));
+                    return BadRequest(results);
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(new JsonResult(results));
+            return Ok(results);
         }
 
         [HttpPost("createuser")]
@@ -113,11 +113,11 @@ namespace restfulapi.Controllers
                 {
                     results.Success = false;
                     results.Message = "Invalid values provided";
-                    return BadRequest(new JsonResult(results));
+                    return BadRequest(results);
                 }
                 var newUser = new User
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     LastTimeLogged = DateTimeOffset.Now,
                     Password = user.Password,
                     UserName = user.UserName
@@ -128,7 +128,7 @@ namespace restfulapi.Controllers
                 {
                     results.Success = false;
                     results.Message = "User already exists";
-                    return BadRequest(new JsonResult(results));
+                    return BadRequest(results);
                 }
                 results.Success = await _userService.CreateUser(newUser);
                 results.Values = newUser;
@@ -138,7 +138,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(new JsonResult(results));
+            return Ok(results);
         }
     }
 }

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "restfulapi", "restfulapi\restfulapi.csproj", "{AD70F63B-E0D5-4AEF-BDB1-67087575E51C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restfulapi", "restfulapi\Restfulapi.csproj", "{AD70F63B-E0D5-4AEF-BDB1-67087575E51C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{910379EF-B56A-40D5-B287-8D72550F9121}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{910379EF-B56A-40D5-B287-8D72550F9121}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

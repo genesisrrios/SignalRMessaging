@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Persistance;
 using System.Threading.Tasks;
 
 namespace Domain.Services
 {
     public class MessageService
     {
-        public async Task<bool> MessageSent(Message message)
+        /// <summary>
+        /// Sends message and returns bool indicating success/failure
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task<bool> SendMessage(Message message)
         {
-            return false;
+            using (var context = new Context())
+            {
+                await context.Messages.AddAsync(message);
+                return await context.SaveChangesAsync() == 1;
+            }
         }
     }
 }

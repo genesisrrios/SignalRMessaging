@@ -23,7 +23,7 @@ namespace restfulapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> WriteMessage([FromBody]Message message)
         {
-            var results = new GenericReturnObject<Message>();
+            var results = new GenericReturnObject<bool>();
             try
             {
                 if (String.IsNullOrEmpty(message.Content))
@@ -34,7 +34,10 @@ namespace restfulapi.Controllers
                 }
                 else
                 {
-                    await _messageService.MessageSent(message);
+                    message.Id = Guid.NewGuid();
+                    message.Read = false;
+                    results.Success = await _messageService.SendMessage(message);
+                    results.Values = results.Success;
                 }
             }
             catch (Exception ex)
@@ -42,7 +45,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok();
+            return Ok(results);
         }
     }
 }

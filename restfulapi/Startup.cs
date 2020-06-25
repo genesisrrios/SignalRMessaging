@@ -17,6 +17,7 @@ namespace restfulapi
 {
     public class Startup
     {
+        private readonly string AllowFromOrigin = "_allowFrom";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,6 +31,19 @@ namespace restfulapi
             services.AddTransient<UserService>();
             services.AddTransient<MessageService>();
             services.AddControllers();
+            services.AddCors(
+                x =>
+                {
+                    x.AddPolicy(AllowFromOrigin, options =>
+                    {
+                        options.WithOrigins("https://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                        options.WithOrigins("http://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +59,7 @@ namespace restfulapi
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseCors(AllowFromOrigin);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

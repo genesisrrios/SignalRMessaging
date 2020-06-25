@@ -1,4 +1,5 @@
-﻿using Domain.Persistance;
+﻿using Domain.Helpers;
+using Domain.Persistance;
 using System;
 using System.Linq;
 using System.Net.Mime;
@@ -74,5 +75,19 @@ public class UserService
         }
         return userWasUpdated;
     }
+
+        public string generateUserName()
+        {
+            var random = new Random();
+            var animalList = new AnimalsList();
+            var colorList = new ColorsList();
+            var animalListCount = animalList.Animals.Count;
+            var colorListCount = colorList.Colors.Count;
+            var animalListIndex = random.Next(0, animalListCount);
+            var colorListIndex = random.Next(0, colorListCount);
+            var color = colorList.Colors[colorListIndex];
+            var animal = animalList.Animals[animalListIndex];
+            return $"{color}  {animal}";
+        }
     }
 }

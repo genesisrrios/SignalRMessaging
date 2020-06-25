@@ -8,7 +8,7 @@ namespace restfulapi.ReturnObjects
     public class GenericReturnObject<TValue>
     {
         public string Message { get; set; }
-        public TValue Values { get; set; }
         public bool Success { get; set; }
+        public TValue Values { get; set; }
     }
 }

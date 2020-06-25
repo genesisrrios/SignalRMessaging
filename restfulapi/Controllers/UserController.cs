@@ -3,9 +3,12 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.DTOs;
 using Domain.Service;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using restfulapi.ReturnObjects;
 
 namespace restfulapi.Controllers
@@ -13,6 +16,7 @@ namespace restfulapi.Controllers
     //I'm keeping this project very simple so im authenticating the user myself and doing everything very simple
     //No security concerns this time
     [Route("api/user")]
+    [EnableCors("_allowFrom")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -101,44 +105,47 @@ namespace restfulapi.Controllers
             return Ok(results);
         }
 
-        [HttpPost("createuser")]
+        [HttpGet("getnewuser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> CreateUser([FromBody]User user)
+        public async Task<ActionResult> GetNewUser()
         {
-            var results = new GenericReturnObject<User>();
+            var results = new GenericReturnObject<UserDTO>();
             try
             {
-                if(String.IsNullOrEmpty(user.UserName )|| String.IsNullOrEmpty(user.Password))
-                {
-                    results.Success = false;
-                    results.Message = "Invalid values provided";
-                    return BadRequest(results);
-                }
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
                     LastTimeLogged = DateTimeOffset.Now,
-                    Password = user.Password,
-                    UserName = user.UserName
-
+                    Password = Guid.NewGuid().ToString(),
+                    UserName = _userService.generateUserName()
                 };
-                var dbUser = _userService.GetUser(user.UserName, user.Password);
-                if(dbUser != default)
+                var dbUser = _userService.GetUser(newUser.UserName, newUser.Password);
+                while (dbUser != default)
                 {
-                    results.Success = false;
-                    results.Message = "User already exists";
-                    return BadRequest(results);
+                    var retryNewUser = new User
+                    {
+                        Id = Guid.NewGuid(),
+                        LastTimeLogged = DateTimeOffset.Now,
+                        Password = Guid.NewGuid().ToString(),
+                        UserName = _userService.generateUserName()
+                    };
+                    dbUser = _userService.GetUser(retryNewUser.UserName, retryNewUser.Password);
                 }
                 results.Success = await _userService.CreateUser(newUser);
-                results.Values = newUser;
+                results.Values = new UserDTO
+                {
+                    UserName = newUser.UserName,
+                    Id = newUser.Id,
+                    LastLogin = newUser.LastTimeLogged.Date.ToShortDateString()
+                };
             }
             catch (Exception ex)
             {
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(results);
+            return Ok(JsonConvert.SerializeObject(results));
         }
     }
 }

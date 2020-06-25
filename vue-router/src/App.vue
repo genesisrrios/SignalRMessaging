@@ -8,7 +8,7 @@
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'jquery/src/jquery.js'
-import 'axios/dist/axios.js'
+
 export default {
   name: 'App'
 }

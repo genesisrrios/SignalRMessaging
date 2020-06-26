@@ -124,7 +124,7 @@ body {
   }
 }
 #frame #sidepanel #profile .wrap img.online {
-  border: 2px solid #2ecc71;
+  border: 2px solid #f5f5f5;
 }
 #frame #sidepanel #profile .wrap img.away {
   border: 2px solid #f1c40f;
@@ -257,10 +257,10 @@ body {
   }
 }
 #frame #sidepanel #profile .wrap #status-options ul li#status-online span.status-circle {
-  background: #2ecc71;
+  background: #e6eaea;
 }
 #frame #sidepanel #profile .wrap #status-options ul li#status-online.active span.status-circle:before {
-  border: 1px solid #2ecc71;
+  border: 1px solid #e6eaea;
 }
 #frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
   background: #f1c40f;
@@ -402,7 +402,7 @@ body {
   background: #95a5a6;
 }
 #frame #sidepanel #contacts ul li.contact .wrap span.online {
-  background: #2ecc71;
+  background: #f5f5f5;
 }
 #frame #sidepanel #contacts ul li.contact .wrap span.away {
   background: #f1c40f;

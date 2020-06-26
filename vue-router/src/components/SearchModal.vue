@@ -26,12 +26,10 @@ export default {
   name: 'searchmodal',
   props: ['primaryColor'],
   components: {
-    vselect
   },
   data () {
     return {
-      color: this.primaryColor,
-      fruits:["Mangoo","Apple","Orange","Melon","Pineapple","Lecy","Blueberry"]
+      color: this.primaryColor
     }
   }
 }

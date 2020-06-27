@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Domain.Services;
 using Domain.Service;
+using AutoMapper;
 
 namespace restfulapi
 {
@@ -44,6 +45,7 @@ namespace restfulapi
                         .AllowAnyMethod();
                     });
                 });
+            services.AddAutoMapper(typeof(Startup).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

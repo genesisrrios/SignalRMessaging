@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domain.DTOs;
 using Domain.Service;
 using Microsoft.AspNetCore.Cors;
@@ -21,9 +22,11 @@ namespace restfulapi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
-        public UserController(UserService userService)
+        private readonly IMapper _mapper;
+        public UserController(UserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet("getuser/{id}")]
@@ -139,6 +142,27 @@ namespace restfulapi.Controllers
                     Id = newUser.Id,
                     LastLogin = newUser.LastTimeLogged.Date.ToShortDateString()
                 };
+            }
+            catch (Exception ex)
+            {
+                results.Success = false;
+                results.Message = ex.Message;
+            }
+            return Ok(JsonConvert.SerializeObject(results));
+        }
+        [HttpGet("searchContactByName/{user_id}/{contact_name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> SearchForNewContactByName(Guid userId,string contactName)
+        {
+            var results = new GenericReturnObject<List<UserDTO>>();
+            try
+            {
+                if(userId == Guid.Empty || String.IsNullOrEmpty(contactName))
+                    results.Success = false;
+
+                var userList = await _userService.GetUserByName(userId, contactName);
+                results.Values = _mapper.Map<List<User>, List<UserDTO>>(userList);
             }
             catch (Exception ex)
             {

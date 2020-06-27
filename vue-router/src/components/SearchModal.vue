@@ -32,7 +32,7 @@ window.$ = $
 
 $('#ajax-select2').select2({
   ajax: {
-    url: `${apiUrl}}`,
+    url: `${apiUrl}searchContactByName/userId=${''}&contactName=${''}`,
     data: function (params) {
       var query = {
         search: params.term,

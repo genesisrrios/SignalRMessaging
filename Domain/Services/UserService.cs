@@ -1,6 +1,8 @@
 ﻿using Domain.Helpers;
 using Domain.Persistance;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -88,6 +90,23 @@ public class UserService
             var color = colorList.Colors[colorListIndex];
             var animal = animalList.Animals[animalListIndex];
             return $"{color}  {animal}";
+        }
+
+        public async Task<List<User>> GetUserByName(Guid userId, string contactName)
+        {
+            List<User> results = new List<User>();
+            try
+            {
+                using (var context = new Context())
+                {
+                    results = await context.Users.Where(x=>x.UserName.Contains(contactName)).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return results;
         }
     }
 }

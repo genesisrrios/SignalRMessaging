@@ -57,7 +57,8 @@ export default {
   methods: {
     getUser: async function () {
       let self = this
-      axios.get('https://localhost:44359/api/user/getnewuser')
+      // eslint-disable-next-line
+      axios.get(`${this.apiUrl}api/user/getnewuser`)
         .then(function (response) {
           let data = response.data.Values
           self.assignValuesToUserInformation(data)

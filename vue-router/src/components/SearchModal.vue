@@ -10,6 +10,7 @@
           </button>
       </div>
       <div class="modal-body">
+        <select id="ajax-select2" class="js-data-example-ajax form-control"></select>
       </div>
       <div class="modal-footer" v-bind:style="{'background-color':primaryColor}">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -21,20 +22,44 @@
 </template>
 
 <script>
+// eslint-disable-next-line
+import select2 from 'select2'
+import jQuery from 'jquery'
+import mixins from '../mixins.js'
+let apiUrl
+const $ = jQuery
+window.$ = $
 
+$('#ajax-select2').select2({
+  ajax: {
+    url: `${apiUrl}}`,
+    data: function (params) {
+      var query = {
+        search: params.term,
+        type: 'public'
+      }
+
+      // Query parameters will be ?search=[term]&type=public
+      return query
+    }
+  }
+})
 export default {
   name: 'searchmodal',
   props: ['primaryColor'],
+  mixins: [mixins],
   components: {
   },
   data () {
     return {
       color: this.primaryColor
     }
+  },
+  mounted () {
+    apiUrl = this.apiUrl
   }
 }
 </script>
 
 <style>
-
 </style>

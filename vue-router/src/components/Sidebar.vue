@@ -70,9 +70,10 @@ export default {
       this.username = parameters.user_name
     },
     pickRandomColorForUser: function () {
-      let colorListLength = hexColorList.length
-      let randomNumber = generateRandomNumber(colorListLength)
-      this.userPrimaryColor = hexColorList[randomNumber]
+      // let colorListLength = hexColorList.length
+      // let randomNumber = generateRandomNumber(colorListLength)
+      // this.userPrimaryColor = hexColorList[randomNumber]
+      this.userPrimaryColor = 'black'
     },
     pickRandomProfileImage: function () {
       let imageListLength = imageList.length

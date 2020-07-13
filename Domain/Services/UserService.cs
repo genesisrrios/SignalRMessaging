@@ -92,7 +92,7 @@ public class UserService
             return $"{color}  {animal}";
         }
 
-        public async Task<List<User>> GetUserByName(Guid userId, string contactName)
+        public async Task<List<User>> GetUserByName(string contactName)
         {
             List<User> results = new List<User>();
             try
@@ -105,6 +105,22 @@ public class UserService
             catch (Exception ex)
             {
                 
+            }
+            return results;
+        }
+        public async Task<List<User>> GetUserById(Guid id)
+        {
+            List<User> results = new List<User>();
+            try
+            {
+                using (var context = new Context())
+                {
+                    results = await context.Users.Where(x => x.Id == id).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
             return results;
         }

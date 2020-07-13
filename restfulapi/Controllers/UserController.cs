@@ -148,20 +148,28 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(JsonConvert.SerializeObject(results));
+            return Ok(results);
         }
-        [HttpGet("searchContactByName/{user_id}/{contact_name}")]
+        [HttpGet("searchContactByName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> SearchForNewContactByName(Guid userId,string contactName)
+        public async Task<ActionResult> SearchContactByName([FromQuery]Guid user_id,[FromQuery]string contact_name)
         {
             var results = new GenericReturnObject<List<UserDTO>>();
             try
             {
-                if(userId == Guid.Empty || String.IsNullOrEmpty(contactName))
+                if(user_id == Guid.Empty || String.IsNullOrEmpty(contact_name))
+                {
                     results.Success = false;
-
-                var userList = await _userService.GetUserByName(userId, contactName);
+                    return BadRequest(results);
+                }
+                var userMakingRequest = await _userService.GetUserById(user_id);
+                if (userMakingRequest == default)
+                {
+                    results.Success = false;
+                    return BadRequest(results);
+                }
+                var userList = await _userService.GetUserByName(contact_name);
                 results.Values = _mapper.Map<List<User>, List<UserDTO>>(userList);
             }
             catch (Exception ex)
@@ -169,7 +177,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(JsonConvert.SerializeObject(results));
+            return Ok(results);
         }
     }
 }

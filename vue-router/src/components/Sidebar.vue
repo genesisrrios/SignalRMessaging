@@ -56,6 +56,9 @@ export default {
   },
   methods: {
     getUser: async function () {
+      if (localStorage.username && localStorage.userId) {
+        return
+      }
       let self = this
       // eslint-disable-next-line
       axios.get(`${this.apiUrl}api/user/getnewuser`)
@@ -67,6 +70,8 @@ export default {
         })
     },
     assignValuesToUserInformation: function (parameters) {
+      localStorage.userId = parameters.id
+      localStorage.username = parameters.user_name
       this.username = parameters.user_name
     },
     pickRandomColorForUser: function () {

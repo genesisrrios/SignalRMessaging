@@ -28,6 +28,7 @@
 
 <script>
 import mixins from '../mixins.js'
+import axios from 'axios'
 
 export default {
   name: 'searchmodal',
@@ -46,7 +47,7 @@ export default {
   methods: {
     searchContactByName: function () {
       // eslint-disable-next-line
-      axios.get(`${this.apiUrl}api/user/searchContactByName/${this.userId}/${this.searchTerm}`)
+      axios.get(`${this.apiUrl}api/user/searchContactByName?user_id=${localStorage.userId}&contact_name=${this.searchTerm}`)
         .then(function (response) {
         }).catch(error => {
           console.log(error.response)
@@ -56,7 +57,7 @@ export default {
   watch: {
     searchTerm: function () {
       if (this.searchTerm) {
-        // this.searchContactByName()
+        this.searchContactByName()
       }
     }
   }

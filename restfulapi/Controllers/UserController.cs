@@ -29,28 +29,29 @@ namespace restfulapi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getuser/{id}")]
+        [HttpGet("getuser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetUser(Guid userId)
+        public async Task<ActionResult> GetUser([FromQuery]Guid user_id)
         {
-            var results = new GenericReturnObject<User>();
+            var results = new GenericReturnObject<UserDTO>();
             try
             {
-                results.Values = _userService.GetUser(userId);
-                if (userId == Guid.Empty)
+                if (user_id == Guid.Empty)
                 {
                     results.Message = "Invalid userid";
                     results.Success = false;
                     return BadRequest(results);
                 }
+                var user = await _userService.GetUser(user_id);
+                results.Values = _mapper.Map<User, UserDTO>(user);
             }
             catch (Exception ex)
             {
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok();
+            return Ok(JsonConvert.SerializeObject(results));
         }
         [HttpGet("getuser/username={username}&password={password}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -148,7 +149,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(results);
+            return Ok(JsonConvert.SerializeObject(results));
         }
         [HttpGet("searchContactByName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -163,7 +164,7 @@ namespace restfulapi.Controllers
                     results.Success = false;
                     return BadRequest(results);
                 }
-                var userMakingRequest = await _userService.GetUserById(user_id);
+                var userMakingRequest = await _userService.GetUser(user_id);
                 if (userMakingRequest == default)
                 {
                     results.Success = false;
@@ -177,7 +178,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(results);
+            return Ok(JsonConvert.SerializeObject(results));
         }
     }
 }

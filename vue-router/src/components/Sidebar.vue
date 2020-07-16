@@ -56,18 +56,21 @@ export default {
   },
   methods: {
     getUser: async function () {
-      if (localStorage.username && localStorage.userId) {
-        return
-      }
       let self = this
-      // eslint-disable-next-line
-      axios.get(`${this.apiUrl}api/user/getnewuser`)
-        .then(function (response) {
-          let data = response.data.Values
-          self.assignValuesToUserInformation(data)
-        }).catch(error => {
-          console.log(error.response)
-        })
+      if (localStorage.username && localStorage.userId) {
+        axios.get(`${this.apiUrl}api/user/getuser?user_id=${localStorage.userId}`)
+          .then(function (response) {
+            if (!response.data.Values) {
+              self.createNewUser()
+            } else {
+              self.assignValuesToUserInformation(response.data.Values)
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+      } else {
+        self.createNewUser()
+      }
     },
     assignValuesToUserInformation: function (parameters) {
       localStorage.userId = parameters.id
@@ -84,6 +87,17 @@ export default {
       let imageListLength = imageList.length
       let randomNumber = generateRandomNumber(imageListLength)
       return require('../assets/' + imageList[randomNumber])
+    },
+    createNewUser: function () {
+      let self = this
+      // eslint-disable-next-line
+      axios.get(`${this.apiUrl}api/user/getnewuser`)
+        .then(function (response) {
+          let data = response.data.Values
+          self.assignValuesToUserInformation(data)
+        }).catch(error => {
+          console.log(error)
+        })
     }
   },
   created: function () {

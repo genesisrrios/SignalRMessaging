@@ -28,14 +28,14 @@ public class UserService
         }
         return user;
     }
-    public User GetUser(Guid userId)
+    public async Task<User> GetUser(Guid userId)
     {
         var user = new User();
         try
         {
             using (var context = new Context())
             {
-                user = context.Users.Where(x => x.Id == userId).SingleOrDefault();
+                user = await context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
             }
         }
         catch (Exception ex)
@@ -99,7 +99,7 @@ public class UserService
             {
                 using (var context = new Context())
                 {
-                    results = await context.Users.Where(x=>x.UserName.Contains(contactName)).ToListAsync();
+                    //TODO add user query by contains method signature
                 }
             }
             catch (Exception ex)

@@ -56,7 +56,7 @@ export default {
   },
   watch: {
     searchTerm: function () {
-      if (this.searchTerm) {
+      if (this.searchTerm && this.searchTerm.length > 3) {
         this.searchContactByName()
       }
     }

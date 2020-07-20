@@ -177,7 +177,12 @@ namespace restfulapi.Controllers
                     return BadRequest(results);
                 }
                 var userList = await _userService.GetUserByName(contact_name);
-                results.Values = _mapper.Map<List<User>, List<UserDTO>>(userList);
+                //TODO FIX MAPPING HERE
+                results.Values = userList.Select(x => new UserDTO
+                {
+                    UserName = x.UserName,
+                    Id = x.Id
+                }).ToList();
             }
             catch (Exception ex)
             {

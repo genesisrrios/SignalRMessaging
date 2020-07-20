@@ -105,7 +105,7 @@ public class UserService
             {
                 using (var context = new Context())
                 {
-                    //TODO add user query by contains method signature
+                    results = await context.Users.Where(x => x.UserName.Contains(contactName)).ToListAsync();
                 }
             }
             catch (Exception ex)

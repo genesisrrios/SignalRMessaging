@@ -15,11 +15,14 @@
             <label for="searchUsername">Username</label>
             <input type="text" class="form-control" id="searchUsername" placeholder="Search contact by username" v-model="searchTerm">
           </div>
+          <select name="users-in-search" id="users-in-search" v-model="selectedUserToAdd">
+            <option v-for="user in userListBySearchTerm" value="user.id" v-bind:key="user.user_name">{{user.user_name}}</option>
+          </select>
         </form>
       </div>
       <div class="modal-footer" v-bind:style="{'background-color':primaryColor}">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" v-on:click=AddContact>Add Contact</button>
       </div>
     </div>
   </div>
@@ -39,19 +42,26 @@ export default {
   data () {
     return {
       color: this.primaryColor,
-      searchTerm: null
+      searchTerm: null,
+      userListBySearchTerm: [],
+      selectedUserToAdd: null
     }
   },
   mounted () {
   },
   methods: {
     searchContactByName: function () {
-      // eslint-disable-next-line
+      let self = this
       axios.get(`${this.apiUrl}api/user/searchContactByName?user_id=${localStorage.userId}&contact_name=${this.searchTerm}`)
         .then(function (response) {
+          console.log(response.data.Values)
+          self.userListBySearchTerm = response.data.Values
         }).catch(error => {
           console.log(error.response)
         })
+    },
+    AddContact: function () {
+      console.log('test')
     }
   },
   watch: {

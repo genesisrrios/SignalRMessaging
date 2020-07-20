@@ -78,18 +78,24 @@ public class UserService
         return userWasUpdated;
     }
 
-        public string generateUserName()
+        public (string,string) GenerateUserColor()
+        {
+            var random = new Random();
+            var colorList = new ColorsList();
+            var colorListCount = colorList.Colors.Count;
+            var colorListIndex = random.Next(0, colorListCount);
+            var colorName = colorList.Colors.ElementAt(colorListIndex).Key;
+            var colorHex = colorList.Colors.ElementAt(colorListIndex).Value;
+            return (colorName,colorHex);
+        }
+        public string GenerateUserAnimal()
         {
             var random = new Random();
             var animalList = new AnimalsList();
-            var colorList = new ColorsList();
             var animalListCount = animalList.Animals.Count;
-            var colorListCount = colorList.Colors.Count;
             var animalListIndex = random.Next(0, animalListCount);
-            var colorListIndex = random.Next(0, colorListCount);
-            var color = colorList.Colors[colorListIndex];
             var animal = animalList.Animals[animalListIndex];
-            return $"{color}  {animal}";
+            return animal;
         }
 
         public async Task<List<User>> GetUserByName(string contactName)

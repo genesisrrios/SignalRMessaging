@@ -8,4 +8,5 @@ public class User
     [JsonProperty("password")]
     public string Password { get; set; }
     public DateTimeOffset LastTimeLogged { get; set; }
+    public string PrimaryColorHex { get; set; }
 }

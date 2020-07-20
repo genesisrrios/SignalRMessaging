@@ -117,12 +117,16 @@ namespace restfulapi.Controllers
             var results = new GenericReturnObject<UserDTO>();
             try
             {
+                var userColor = _userService.GenerateUserColor();
+                var userAnimal = _userService.GenerateUserAnimal();
+                var userName = $"{ userColor.Item1} { userAnimal }";
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
                     LastTimeLogged = DateTimeOffset.Now,
                     Password = Guid.NewGuid().ToString(),
-                    UserName = _userService.generateUserName()
+                    UserName = userName,
+                    PrimaryColorHex = userColor.Item2
                 };
                 var dbUser = _userService.GetUser(newUser.UserName, newUser.Password);
                 while (dbUser != default)
@@ -132,7 +136,8 @@ namespace restfulapi.Controllers
                         Id = Guid.NewGuid(),
                         LastTimeLogged = DateTimeOffset.Now,
                         Password = Guid.NewGuid().ToString(),
-                        UserName = _userService.generateUserName()
+                        UserName = userName,
+                        PrimaryColorHex = userColor.Item2
                     };
                     dbUser = _userService.GetUser(retryNewUser.UserName, retryNewUser.Password);
                 }
@@ -141,7 +146,8 @@ namespace restfulapi.Controllers
                 {
                     UserName = newUser.UserName,
                     Id = newUser.Id,
-                    LastLogin = newUser.LastTimeLogged.Date.ToShortDateString()
+                    LastLogin = newUser.LastTimeLogged.Date.ToShortDateString(),
+                    PrimaryColorHex = userColor.Item2
                 };
             }
             catch (Exception ex)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.DTOs;
+using Domain.Models;
 using Domain.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -183,6 +184,41 @@ namespace restfulapi.Controllers
                     UserName = x.UserName,
                     Id = x.Id
                 }).ToList();
+            }
+            catch (Exception ex)
+            {
+                results.Success = false;
+                results.Message = ex.Message;
+            }
+            return Ok(JsonConvert.SerializeObject(results));
+        }
+        [HttpGet("addContact")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> AddContact([FromBody]Contact contact)
+        {
+            var results = new GenericReturnObject<string>();
+            try
+            {
+                if (contact.ContactId == Guid.Empty)
+                {
+                    results.Success = false;
+                    results.Message = "Empty Contact ID";
+                    return BadRequest(JsonConvert.SerializeObject(results));
+                };
+                if (contact.UserId == Guid.Empty)
+                {
+                    results.Success = false;
+                    results.Message = "Empty UserId";
+                    return BadRequest(JsonConvert.SerializeObject(results));
+                };
+                var addContactResults = await _userService.AddContact(contact);
+                if(!addContactResults.Item1 && addContactResults.Item2 > 0)
+                {
+                    results.Success = false;
+                    results.Message = "";//Error fix later
+                    return BadRequest(JsonConvert.SerializeObject(results));
+                }
             }
             catch (Exception ex)
             {

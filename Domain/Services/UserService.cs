@@ -1,4 +1,5 @@
 ﻿using Domain.Helpers;
+using Domain.Models;
 using Domain.Persistance;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -114,14 +115,14 @@ public class UserService
             }
             return results;
         }
-        public async Task<List<User>> GetUserById(Guid id)
+        public async Task<User> GetUserById(Guid id)
         {
-            List<User> results = new List<User>();
+            var results = new User();
             try
             {
                 using (var context = new Context())
                 {
-                    results = await context.Users.Where(x => x.Id == id).ToListAsync();
+                    results = await context.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
                 }
             }
             catch (Exception ex)
@@ -129,6 +130,42 @@ public class UserService
 
             }
             return results;
+        }
+        public async Task<(bool,int)> AddContact(Contact contact)
+        {
+            try
+            {
+                //TODO FIX Messages for errors
+                using (var context = new Context())
+                {
+                    var alreadyContacts = await context.Contacts.Where(x => x.ContactId == contact.ContactId && x.UserId == contact.UserId).AnyAsync();
+
+                    if (alreadyContacts)
+                        return (false, 1);
+                    // One means users are already contacts
+
+                    var userRequestingToAddContact = await GetUserById(contact.UserId);
+                    if(userRequestingToAddContact == default)
+                        return (false, 2);
+                    //USER DOESNT EXIST
+
+                    var contactToAdd = await GetUserById(contact.ContactId);
+                    if(contactToAdd == default)
+                        return (false, 2);
+
+                    context.Contacts.Add(new Contact
+                    {
+                        ContactId = contactToAdd.Id,
+                        UserId = contact.UserId,
+                        IsBlocked = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return (true,0);
         }
     }
 }

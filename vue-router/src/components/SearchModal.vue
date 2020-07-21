@@ -13,13 +13,13 @@
         <form>
           <div class="form-group">
             <label for="searchUsername">Username</label>
-            <input type="text" class="form-control" id="searchUsername" placeholder="Search contact by username" v-model="searchTerm">
+            <v-select :options="userListBySearchTerm" v-model="selectedUserToAdd" @search="searchContactByName"></v-select>
           </div>
         </form>
       </div>
       <div class="modal-footer" v-bind:style="{'background-color':primaryColor}">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" v-on:click=AddContact>Add Contact</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click=AddContact>Add Contact</button>
       </div>
     </div>
   </div>
@@ -29,17 +29,18 @@
 <script>
 import mixins from '../mixins.js'
 import axios from 'axios'
+import vSelect from 'vue-select'
 
 export default {
   name: 'searchmodal',
   props: ['primaryColor'],
   mixins: [mixins],
   components: {
+    vSelect
   },
   data () {
     return {
       color: this.primaryColor,
-      searchTerm: null,
       userListBySearchTerm: [],
       selectedUserToAdd: null
     }
@@ -47,55 +48,41 @@ export default {
   mounted () {
   },
   methods: {
-    searchContactByName: function () {
+    searchContactByName: function (searchTerm, loading) {
       let self = this
-      axios.get(`${this.apiUrl}api/user/searchContactByName?user_id=${localStorage.userId}&contact_name=${this.searchTerm}`)
+      axios.get(`${this.apiUrl}api/user/searchContactByName?user_id=${localStorage.userId}&contact_name=${searchTerm}`)
         .then(function (response) {
-          console.log(response.data.Values)
-          self.userListBySearchTerm = response.data.Values
+          let searchResults = response.data.Values
+          let userList = []
+          searchResults.forEach(user => {
+            userList.push(
+              {
+                label: user.user_name,
+                code: user.id
+              })
+          })
+          self.userListBySearchTerm = userList
         }).catch(error => {
           console.log(error.response)
         })
     },
     AddContact: function () {
-      console.log('test')
-    }
-  },
-  watch: {
-    searchTerm: function () {
-      if (this.searchTerm && this.searchTerm.length > 3) {
-        this.searchContactByName()
-      }
+      console.log(this.selectedUserToAdd)
+      axios.post(`${this.apiUrl}api/user/addContact`, {
+        firstName: 'Fred',
+        lastName: 'Flintstone'
+      })
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
 </script>
 
 <style>
-select {
-  margin: 50px;
-  width: 150px;
-  padding: 5px 35px 5px 5px;
-  font-size: 16px;
-  border: 1px solid #CCC;
-  height: 34px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: url(http://www.stackoverflow.com/favicon.ico) 96% / 15% no-repeat #EEE;
-}
 
-/* CAUTION: Internet Explorer hackery ahead */
-
-select::-ms-expand {
-    display: none; /* Remove default arrow in Internet Explorer 10 and 11 */
-}
-
-/* Target Internet Explorer 9 to undo the custom arrow */
-@media screen and (min-width:0\0) {
-    select {
-        background: none\9;
-        padding: 5px\9;
-    }
-}
 </style>

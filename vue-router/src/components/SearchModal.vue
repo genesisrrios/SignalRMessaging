@@ -65,13 +65,17 @@ export default {
         }).catch(error => {
           console.log(error.response)
         })
-    },
+    }, // FIX POST HEADERS
     AddContact: function () {
-      console.log(this.selectedUserToAdd)
-      axios.post(`${this.apiUrl}api/user/addContact`, {
-        firstName: 'Fred',
-        lastName: 'Flintstone'
+      let parameters = JSON.stringify({
+        user_id: localStorage.userId,
+        contact_id: this.selectedUserToAdd.code,
+        is_blocked: false
       })
+      axios.post(`${this.apiUrl}api/user/addContact`, parameters, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }})
         .then(function (response) {
           console.log(response)
         })

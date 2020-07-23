@@ -192,7 +192,7 @@ namespace restfulapi.Controllers
             }
             return Ok(JsonConvert.SerializeObject(results));
         }
-        [HttpGet("addContact")]
+        [HttpPost("addContact")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> AddContact([FromBody]Contact contact)

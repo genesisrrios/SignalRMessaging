@@ -30,7 +30,7 @@
 import mixins from '../mixins.js'
 import axios from 'axios'
 import vSelect from 'vue-select'
-import { EventBus } from '../event-bus.js';
+import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'searchmodal',

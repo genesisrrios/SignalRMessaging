@@ -30,6 +30,7 @@
 import mixins from '../mixins.js'
 import axios from 'axios'
 import vSelect from 'vue-select'
+import { EventBus } from '../event-bus.js';
 
 export default {
   name: 'searchmodal',
@@ -52,7 +53,7 @@ export default {
       let self = this
       axios.get(`${this.apiUrl}api/user/searchContactByName?user_id=${localStorage.userId}&contact_name=${searchTerm}`)
         .then(function (response) {
-          let searchResults = response.data.Values
+          let searchResults = response.data.values
           let userList = []
           searchResults.forEach(user => {
             userList.push(
@@ -77,7 +78,11 @@ export default {
           'Content-Type': 'application/json; charset=utf-8'
         }})
         .then(function (response) {
-          console.log(response)
+          if (response.data.success) {
+            // eslint-disable-next-line
+            //TODO Show success modal
+            EventBus.$emit('contact-added');
+          }
         })
         .catch(function (error) {
           console.log(error)
@@ -86,7 +91,5 @@ export default {
   }
 }
 </script>
-
 <style>
-
 </style>

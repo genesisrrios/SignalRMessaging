@@ -17,13 +17,12 @@
         <input v-bind:style="{'background-color':userPrimaryColor}" type='text' placeholder='Search contacts...' />
     </div>
     <div id='contacts'>
-        <ul>
-            <li class='contact active'>
+        <ul v-for="contact in contactList" v-bind:key="contact.user_id">
+            <li class='contact'>
                 <div class='wrap'>
-                <img src='http://emilcarlsson.se/assets/harveyspecter.png' alt='' />
                 <div class='meta'>
-                    <p class='name'>Harvey Specter</p>
-                    <p class='preview'>Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
+                    <p class='name'>{{contact.user_name}}</p>
+                    <p class='preview'>{{contact.last_message_excerpt}}</p>
                 </div>
                 </div>
             </li>
@@ -41,6 +40,7 @@
 import mixins from '../mixins.js'
 import axios from 'axios'
 import searchmodal from '@/components/SearchModal.vue'
+import { EventBus } from '../event-bus.js'
 
 export default {
   name: 'sidebar',
@@ -51,7 +51,8 @@ export default {
   data () {
     return {
       username: null,
-      userPrimaryColor: null
+      userPrimaryColor: null,
+      contactList: []
     }
   },
   methods: {
@@ -60,10 +61,11 @@ export default {
       if (localStorage.username && localStorage.userId) {
         axios.get(`${this.apiUrl}api/user/getuser?user_id=${localStorage.userId}`)
           .then(function (response) {
-            if (!response.data.Values) {
+            if (!response.data.values) {
               self.createNewUser()
             } else {
-              self.assignValuesToUserInformation(response.data.Values)
+              self.assignValuesToUserInformation(response.data.values)
+              self.getContactList()
             }
           }).catch(error => {
             console.log(error)
@@ -88,23 +90,44 @@ export default {
       // eslint-disable-next-line
       axios.get(`${this.apiUrl}api/user/getnewuser`)
         .then(function (response) {
-          let data = response.data.Values
+          let data = response.data.values
           self.assignValuesToUserInformation(data)
         }).catch(error => {
           console.log(error)
         })
+    },
+    getContactList: function () {
+      let self = this
+        axios.get(`${this.apiUrl}api/contact/getContacts?user_id=${localStorage.userId}`)
+          .then(function (response) {
+            if (response.data.values) {
+              self.contactList = response.data.values
+            }
+            else{
+
+            }
+          }).catch(error => {
+            console.log(error)
+          })
     }
   },
-  created: function () {
+  created: function () {    
+    let self = this
+    EventBus.$on('contact-added', function(){
+      self.getContactList();
+    })
+  },
+  mounted: function () {
     this.getUser()
   }
 }
+
+
 function generateRandomNumber (maxNumber = 10) {
   let min = Math.ceil(0)
   let max = Math.floor(maxNumber)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
-/* eslint-disable */ 
 
 let imageList = ['analytics-graph-bar.svg', 'baby-trolley.svg', 'baggage.svg', 
                 'beach-parasol-water-1.svg', 'biking-person.svg', 'bin-2.svg', 

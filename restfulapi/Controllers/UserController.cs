@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.DTOs;
 using Domain.Models;
 using Domain.Service;
+using Domain.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,13 @@ namespace restfulapi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly ContactService _contactService;
         private readonly IMapper _mapper;
-        public UserController(UserService userService, IMapper mapper)
+        public UserController(UserService userService, IMapper mapper, ContactService contactService)
         {
             _userService = userService;
             _mapper = mapper;
+            _contactService = contactService;
         }
 
         [HttpGet("getuser")]
@@ -177,7 +180,7 @@ namespace restfulapi.Controllers
                     results.Success = false;
                     return BadRequest(results);
                 }
-                var userList = await _userService.GetUserByName(contact_name);
+                var userList = await _userService.GetUserByName(contact_name, user_id);
                 //TODO FIX MAPPING HERE
                 results.Values = userList.Select(x => new UserDTO
                 {
@@ -212,7 +215,23 @@ namespace restfulapi.Controllers
                     results.Message = "Empty UserId";
                     return BadRequest(JsonConvert.SerializeObject(results));
                 };
-                var addContactResults = await _userService.AddContact(contact);
+
+                var userRequestingToAddContact = await _userService.GetUserById(contact.UserId);
+                if (userRequestingToAddContact == default)
+                {
+                    results.Success = false;
+                    results.Message = "User doesn't exist";
+                    return BadRequest(JsonConvert.SerializeObject(results));
+                }
+
+                var contactToAdd = await _userService.GetUserById(contact.ContactId);
+                if (contactToAdd == default && contactToAdd?.Id == contact.ContactId)
+                {
+                    results.Success = false;
+                    results.Message = "Contact doesn't exist";
+                    return BadRequest(JsonConvert.SerializeObject(results));
+                }
+                var addContactResults = await _contactService.AddContact(contact);
                 if(!addContactResults.Item1 && addContactResults.Item2 > 0)
                 {
                     results.Success = false;
@@ -225,6 +244,7 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
+            results.Success = true;
             return Ok(JsonConvert.SerializeObject(results));
         }
     }

@@ -99,14 +99,14 @@ public class UserService
             return animal;
         }
 
-        public async Task<List<User>> GetUserByName(string contactName)
+        public async Task<List<User>> GetUserByName(string contactName, Guid userSearching)
         {
             List<User> results = new List<User>();
             try
             {
                 using (var context = new Context())
                 {
-                    results = await context.Users.Where(x => x.UserName.Contains(contactName)).ToListAsync();
+                    results = await context.Users.Where(x => x.UserName.Contains(contactName) && x.Id != userSearching).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -130,42 +130,6 @@ public class UserService
 
             }
             return results;
-        }
-        public async Task<(bool,int)> AddContact(Contact contact)
-        {
-            try
-            {
-                //TODO FIX Messages for errors
-                using (var context = new Context())
-                {
-                    var alreadyContacts = await context.Contacts.Where(x => x.ContactId == contact.ContactId && x.UserId == contact.UserId).AnyAsync();
-
-                    if (alreadyContacts)
-                        return (false, 1);
-                    // One means users are already contacts
-
-                    var userRequestingToAddContact = await GetUserById(contact.UserId);
-                    if(userRequestingToAddContact == default)
-                        return (false, 2);
-                    //USER DOESNT EXIST
-
-                    var contactToAdd = await GetUserById(contact.ContactId);
-                    if(contactToAdd == default)
-                        return (false, 2);
-
-                    context.Contacts.Add(new Contact
-                    {
-                        ContactId = contactToAdd.Id,
-                        UserId = contact.UserId,
-                        IsBlocked = false
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return (true,0);
         }
     }
 }

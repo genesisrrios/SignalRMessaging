@@ -31,6 +31,7 @@ namespace restfulapi
         {
             services.AddTransient<UserService>();
             services.AddTransient<MessageService>();
+            services.AddTransient<ContactService>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddCors(
                 x =>

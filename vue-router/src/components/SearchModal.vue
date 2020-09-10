@@ -30,6 +30,7 @@
 import mixins from '../mixins.js'
 import axios from 'axios'
 import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
 export default {
   name: 'searchmodal',

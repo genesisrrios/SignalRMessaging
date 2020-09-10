@@ -7,4 +7,6 @@ public class Message
     public Guid From { get; set; }
     public Guid To { get; set; }
     public bool Read { get; set; }
+    public DateTimeOffset TimeSent { get; set; }
+    public DateTimeOffset TimeRead { get; set; }
 }

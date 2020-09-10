@@ -36,6 +36,8 @@ namespace restfulapi.Controllers
                 {
                     message.Id = Guid.NewGuid();
                     message.Read = false;
+                    message.TimeSent = DateTimeOffset.Now;
+
                     results.Success = await _messageService.SendMessage(message);
                     results.Values = results.Success;
                 }

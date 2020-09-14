@@ -77,8 +77,9 @@ export default {
     assignValuesToUserInformation: function (parameters) {
       localStorage.userId = parameters.id
       localStorage.username = parameters.user_name
+      localStorage.primaryColor = parameters.primary_color_hex
       this.username = parameters.user_name
-      this.userPrimaryColor = parameters.primary_color_hex
+      this.userPrimaryColor = parameters.primary_color_hex      
     },
     pickRandomProfileImage: function () {
       let imageListLength = imageList.length

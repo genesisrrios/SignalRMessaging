@@ -114,18 +114,7 @@ body {
     margin-left: 4px;
   }
 }
-#frame #sidepanel #profile .wrap img.online {
-  border: 2px solid #2ecc71;
-}
-#frame #sidepanel #profile .wrap img.away {
-  border: 2px solid #f1c40f;
-}
-#frame #sidepanel #profile .wrap img.busy {
-  border: 2px solid #e74c3c;
-}
-#frame #sidepanel #profile .wrap img.offline {
-  border: 2px solid #95a5a6;
-}
+
 #frame #sidepanel #profile .wrap p {
   float: left;
   margin-left: 15px;
@@ -246,30 +235,6 @@ body {
   #frame #sidepanel #profile .wrap #status-options ul li p {
     display: none;
   }
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-online span.status-circle {
-  background: #2ecc71;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-online.active span.status-circle:before {
-  border: 1px solid #2ecc71;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-away span.status-circle {
-  background: #f1c40f;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-away.active span.status-circle:before {
-  border: 1px solid #f1c40f;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-busy span.status-circle {
-  background: #e74c3c;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-busy.active span.status-circle:before {
-  border: 1px solid #e74c3c;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-offline span.status-circle {
-  background: #95a5a6;
-}
-#frame #sidepanel #profile .wrap #status-options ul li#status-offline.active span.status-circle:before {
-  border: 1px solid #95a5a6;
 }
 #frame #sidepanel #profile .wrap #expanded {
   padding: 100px 0 0 0;
@@ -398,15 +363,6 @@ body {
   border-radius: 50%;
   border: 2px solid #2c3e50;
   background: #95a5a6;
-}
-#frame #sidepanel #contacts ul li.contact .wrap span.online {
-  background: #2ecc71;
-}
-#frame #sidepanel #contacts ul li.contact .wrap span.away {
-  background: #f1c40f;
-}
-#frame #sidepanel #contacts ul li.contact .wrap span.busy {
-  background: #e74c3c;
 }
 #frame #sidepanel #contacts ul li.contact .wrap img {
   width: 40px;
@@ -579,13 +535,7 @@ body {
 #frame .content .messages ul li:nth-last-child(1) {
   margin-bottom: 20px;
 }
-#frame .content .messages ul li.sent img {
-  margin: 6px 8px 0 0;
-}
-#frame .content .messages ul li.sent p {
-  background: #435f7a;
-  color: #f5f5f5;
-}
+
 #frame .content .messages ul li.replies img {
   float: right;
   margin: 6px 0 0 8px;
@@ -593,11 +543,6 @@ body {
 #frame .content .messages ul li.replies p {
   background: #f5f5f5;
   float: right;
-}
-#frame .content .messages ul li img {
-  width: 22px;
-  border-radius: 50%;
-  float: left;
 }
 #frame .content .messages ul li p {
   display: inline-block;

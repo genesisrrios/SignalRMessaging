@@ -15,5 +15,7 @@ namespace Domain.DTOs
         public string LastLogin { get; set; }
         [JsonProperty("primary_color_hex")]
         public string PrimaryColorHex { get; set; }
+        [JsonProperty("icon")]
+        public string Icon { get; set; }
     }
 }

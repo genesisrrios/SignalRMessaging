@@ -2,11 +2,11 @@
 
 namespace Domain.Helpers
 {
-    public class AnimalsList
+    public class AnimalList
     {
 
         public List<string> Animals { get; set; } = new List<string>();
-        public AnimalsList()
+        public AnimalList()
         {
             Animals.Add("Aardvark");
             Animals.Add("Albatross");

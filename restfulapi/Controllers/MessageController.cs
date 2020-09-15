@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.DTOs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using restfulapi.ReturnObjects;
 
 namespace restfulapi.Controllers
@@ -48,6 +50,35 @@ namespace restfulapi.Controllers
                 results.Message = ex.Message;
             }
             return Ok(results);
+        }
+        [HttpGet("getmessages")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> GetUserMessages([FromQuery] Guid user_id, [FromQuery]Guid contact_id)
+        {
+            var results = new GenericReturnObject<ConversationDTO>();
+            try
+            {
+                if (user_id == Guid.Empty)
+                {
+                    results.Message = "Invalid userid";
+                    results.Success = false;
+                    return BadRequest(results);
+                }
+                if(contact_id == Guid.Empty)
+                {
+                    results.Message = "Invalid contactid";
+                    results.Success = false;
+                    return BadRequest(results);
+                }
+                var messages = await _messageService.GetMessageList(user_id, contact_id);
+            }
+            catch (Exception ex)
+            {
+                results.Success = false;
+                results.Message = ex.Message;
+            }
+            return Ok(JsonConvert.SerializeObject(results));
         }
     }
 }

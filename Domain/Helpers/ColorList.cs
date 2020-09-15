@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Domain.Helpers
 {
-    public class ColorsList
+    public class ColorList
     {
         public Dictionary<string,string> Colors { get; set; } = new Dictionary<string,string>();
 
-        public ColorsList()
+        public ColorList()
         {
             Colors.Add("Brown","#77dd77");
             Colors.Add("Baby Blue","#89cff0");

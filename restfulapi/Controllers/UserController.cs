@@ -123,6 +123,8 @@ namespace restfulapi.Controllers
             {
                 var userColor = _userService.GenerateUserColor();
                 var userAnimal = _userService.GenerateUserAnimal();
+                var profilePicture = _userService.GetUserImage();
+
                 var userName = $"{ userColor.Item1} { userAnimal }";
                 var newUser = new User
                 {
@@ -130,7 +132,8 @@ namespace restfulapi.Controllers
                     LastTimeLogged = DateTimeOffset.Now,
                     Password = Guid.NewGuid().ToString(),
                     UserName = userName,
-                    PrimaryColorHex = userColor.Item2
+                    PrimaryColorHex = userColor.Item2,
+                    Icon = profilePicture
                 };
                 var dbUser = _userService.GetUser(newUser.UserName, newUser.Password);
                 while (dbUser != default)

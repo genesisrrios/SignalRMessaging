@@ -82,7 +82,7 @@ public class UserService
         public (string,string) GenerateUserColor()
         {
             var random = new Random();
-            var colorList = new ColorsList();
+            var colorList = new ColorList();
             var colorListCount = colorList.Colors.Count;
             var colorListIndex = random.Next(0, colorListCount);
             var colorName = colorList.Colors.ElementAt(colorListIndex).Key;
@@ -92,11 +92,21 @@ public class UserService
         public string GenerateUserAnimal()
         {
             var random = new Random();
-            var animalList = new AnimalsList();
+            var animalList = new AnimalList();
             var animalListCount = animalList.Animals.Count;
             var animalListIndex = random.Next(0, animalListCount);
             var animal = animalList.Animals[animalListIndex];
             return animal;
+        }
+
+        public string GetUserImage()
+        {
+            var random = new Random();
+            var images = new Images();
+            var imagesListCount = images.ImageList.Count;
+            var imageListIndex = random.Next(0, imagesListCount);
+            var image = images.ImageList[imageListIndex];
+            return image;
         }
 
         public async Task<List<User>> GetUserByName(string contactName, Guid userSearching)

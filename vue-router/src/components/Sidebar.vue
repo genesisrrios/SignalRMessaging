@@ -2,7 +2,7 @@
     <div id='sidepanel' v-bind:style="{'background-color':userPrimaryColor}">
     <div id='profile'>
         <div class='wrap'>
-            <img id='profile-img' v-bind:src='pickRandomProfileImage()' v-bind:style="{'background-color':userPrimaryColor}" class='online' alt='profile image'>
+            <img id='profile-img' v-bind:src='userProfileImage' v-bind:style="{'background-color':userPrimaryColor}" class='online' alt='profile image'>
             <p>{{username}}</p>
             <i class='fa fa-chevron-down expand-button' aria-hidden='true'></i>
             <div id='status-options'>
@@ -18,7 +18,7 @@
     </div>
     <div id='contacts'>
         <ul v-for="contact in contactList" v-bind:key="contact.user_id">
-            <li class='contact'>
+            <li class='contact' v-on:click="onContactMessagesClick(contact.user_id)">
                 <div class='wrap'>
                 <div class='meta'>
                     <p class='name'>{{contact.user_name}}</p>
@@ -52,6 +52,7 @@ export default {
     return {
       username: null,
       userPrimaryColor: null,
+      userProfileImage: null,
       contactList: []
     }
   },
@@ -79,12 +80,11 @@ export default {
       localStorage.username = parameters.user_name
       localStorage.primaryColor = parameters.primary_color_hex
       this.username = parameters.user_name
-      this.userPrimaryColor = parameters.primary_color_hex      
+      this.userPrimaryColor = parameters.primary_color_hex
+      this.pickRandomProfileImage(parameters.icon)     
     },
-    pickRandomProfileImage: function () {
-      let imageListLength = imageList.length
-      let randomNumber = generateRandomNumber(imageListLength)
-      return require('../assets/' + imageList[randomNumber])
+    pickRandomProfileImage: function (imageName) {
+      this.userProfileImage = require(`../assets/${imageName}`)
     },
     createNewUser: function () {
       let self = this
@@ -110,6 +110,9 @@ export default {
           }).catch(error => {
             console.log(error)
           })
+    },
+    onContactMessagesClick: function (contactId) {
+      EventBus.$emit('show-contact-messages',contactId);
     }
   },
   created: function () {    
@@ -122,45 +125,6 @@ export default {
     this.getUser()
   }
 }
-
-
-function generateRandomNumber (maxNumber = 10) {
-  let min = Math.ceil(0)
-  let max = Math.floor(maxNumber)
-  return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-let imageList = ['analytics-graph-bar.svg', 'baby-trolley.svg', 'baggage.svg', 
-                'beach-parasol-water-1.svg', 'biking-person.svg', 'bin-2.svg', 
-                'binocular.svg', 'bomb-grenade.svg', 'building-modern-1.svg', 
-                'camera-flash.svg', 'coffee-cold.svg', 'coffee-machine.svg', 
-                'cog.svg', 'content-ink-pen-write.svg', 'content-pen-3.svg', 
-                'content-typing-machine.svg', 'couple-man-woman.svg', 'coupon-cut.svg', 
-                'crypto-currency-bitcoin-imac.svg', 'dating-rose.svg', 'dating-smartphone-man.svg', 
-                'design-tool-pen-station.svg', 'design-tool-quill-2.svg', 
-                'desktop-monitor-download.svg', 'desktop-monitor-upload.svg', 
-                'diet-waist-1.svg', 'e-learning-monitor.svg', 'email-action-receive.svg', 
-                'filter-picture.svg', 'flag.svg', 'footwear-heels-ankle.svg', 'gauge-dashboard-1.svg', 
-                'golf-hole.svg', 'graph-stats-circle.svg', 'hammer-1.svg', 'headphones-human.svg', 
-                'human-resources-search-employees.svg', 'insurance-card.svg', 'lab-flask-experiment.svg', 
-                'landmark-japan-shrine.svg', 'laptop-smiley-1.svg', 'lighter.svg', 'like-1.svg', 
-                'login-2.svg', 'love-boat.svg', 'maps-pin.svg', 'medical-personnel-doctor.svg', 
-                'megaphone-1.svg', 'messages-people-person-bubble-oval.svg', 'mobile-phone-2.svg', 
-                'modern-tv-3d-glasses.svg', 'money-wallet-open.svg', 'monkey.svg', 'mood-happy.svg', 
-                'mouse.svg', 'nautic-sports-sailing-person.svg', 'office-work-wireless.svg', 
-                'optimization-timer-1.svg', 'outdoors-tree-valley.svg', 'pencil-2.svg', 
-                'people-man-graduate.svg', 'people-woman-glasses-1.svg', 'phone-actions-ring.svg', 
-                'pin-monitor.svg', 'pin.svg', 'plane-trip-international.svg', 
-                'presentation-board-graph.svg', 'print-text.svg', 'programming-flag.svg', 'rat.svg', 
-                'rooster.svg', 'science-dna.svg', 'screen-1.svg', 'send-email-2.svg', 
-                'shipment-upload.svg', 'shop-cashier-man.svg', 'shop-cashier-woman.svg', 
-                'shopping-bag-heart.svg', 'shopping-bag-tag-1.svg', 'shopping-cart-download.svg', 
-                'show-hat-magician-1.svg', 'skull-1.svg', 'skunk.svg', 'stamps-famous.svg', 
-                'tablet-touch.svg', 'taking-pictures-circle.svg', 'target-center-2.svg', 
-                'video-game-gamasutra.svg', 'video-game-mario-3.svg', 'video-game-mario-enemy.svg', 
-                'video-player-1.svg', 'video-player-cloud.svg', 'video-player-monitor.svg', 
-                'view-off.svg', 'view.svg', 'warehouse-cart-packages.svg', 'warehouse-storage-3.svg', 
-                'wench-double.svg', 'whale-body.svg', 'wireless-payment-credit-card-dollar.svg']                
 </script>
 
 <style>

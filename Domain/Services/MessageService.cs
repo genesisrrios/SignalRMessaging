@@ -31,37 +31,34 @@ namespace Domain.Services
             {
                 using (var context = new Context())
                 {
-                    var messagesTo = from messages in context.Messages
-                                     where messages.From == userId || messages.To == userId
-                                     join users in context.Users on messages.To equals users.Id
-                                     group new { messages, users } by new
-                                     {
-                                         messages.TimeSent
-                                     } into grouped
-                                     select new ConversationDTO
-                                     {
-                                         Message = grouped.FirstOrDefault().messages.Content,
-                                         FromId = grouped.FirstOrDefault().messages.From,
-                                         ToId = grouped.FirstOrDefault().messages.To,
-                                         ProfilePicture = grouped.FirstOrDefault().users.Icon,
-                                         TimeSent = grouped.FirstOrDefault().messages.TimeSent.ToString()
-                                     };
 
-                    var messagesFrom = from messages in context.Messages
-                                     where messages.From == userId || messages.To == userId
-                                     join users in context.Users on messages.From equals users.Id
-                                     group new { messages, users } by new
-                                     {
-                                         messages.TimeSent
-                                     } into grouped
-                                     select new ConversationDTO
-                                     {
-                                         Message = grouped.FirstOrDefault().messages.Content,
-                                         FromId = grouped.FirstOrDefault().messages.From,
-                                         ToId = grouped.FirstOrDefault().messages.To,
-                                         ProfilePicture = grouped.FirstOrDefault().users.Icon,
-                                         TimeSent = grouped.FirstOrDefault().messages.TimeSent.ToString()
-                                     };
+                    var messagesTo = await (from messages in context.Messages
+                                            where messages.From == userId && messages.To == contactId
+                                            join users in context.Users on messages.From equals users.Id
+                                            select new ConversationDTO
+                                            {
+                                                Message = messages.Content,
+                                                MessageId = messages.Id,
+                                                FromId = messages.From,
+                                                ToId = messages.To,
+                                                SentByMe = true,
+                                                ProfilePicture = users.Icon,
+                                                TimeSent = messages.TimeSent.ToString()
+                                            }).ToListAsync();
+
+                    var messagesFrom = await (from messages in context.Messages
+                                            where messages.From == contactId && messages.To == userId
+                                            join users in context.Users on messages.From equals users.Id
+                                            select new ConversationDTO
+                                            {
+                                                Message = messages.Content,
+                                                MessageId = messages.Id,
+                                                FromId = messages.From,
+                                                ToId = messages.To,
+                                                SentByMe = false,
+                                                ProfilePicture = users.Icon,
+                                                TimeSent = messages.TimeSent.ToString()
+                                            }).ToListAsync();
 
                     results.AddRange(messagesTo);
                     results.AddRange(messagesFrom);

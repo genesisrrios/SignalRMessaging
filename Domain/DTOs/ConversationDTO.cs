@@ -17,5 +17,9 @@ namespace Domain.DTOs
         public string ProfilePicture { get; set; }
         [JsonProperty("time_sent")]
         public string TimeSent { get; set; }
+        [JsonProperty("message_id")]
+        public Guid MessageId { get; set; }
+        [JsonProperty("sent_by_me")]
+        public bool SentByMe { get; set; }
     }
 }

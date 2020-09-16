@@ -2,11 +2,13 @@
   <div class="content">
     <div class="messages">
       <ul v-for="message in messageList" v-bind:key="message.id">
-        <li class="sent">
-          <p>What are you talking about? You do what they say or they shoot you.</p>
+        <li v-if="message.sent_by_me" class="sent">
+          <img v-bind:src="require(`../assets/${message.profile_picture}`)" alt="" />
+          <p>{{message.message}}</p>
         </li>
-        <li class="replies">
-          <p>Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
+        <li v-else class="replies">
+          <img v-bind:src="require(`../assets/${message.profile_picture}`)" alt="" />
+          <p>{{message.message}}</p>
         </li>
       </ul>
     </div>
@@ -40,10 +42,13 @@ export default {
       if(this.contactId != null) {
         axios.get(`${this.apiUrl}api/message/getmessages?user_id=${localStorage.userId}&contact_id=${this.contactId}`)
           .then(function (response) {
-            if (!response.data.values) {
-              self.messageList = response.data.values
+            if (response.data.success) {
+              self.messageList = response.data.values              
             } else {
             }
+          })
+          .then(function() {
+            StyleMyMessageBubbles()
           }).catch(error => {
             console.log(error)
         })
@@ -58,14 +63,15 @@ export default {
     })    
   },
   mounted: function () {
+  }
+}
+function StyleMyMessageBubbles () {
     let messageBubbles = document.getElementsByClassName('sent')
     for (let i = 0; i < messageBubbles.length; i++) {
       messageBubbles[i].style.backgroundColor = localStorage.primaryColor
       messageBubbles[i].style.borderRadius = '20px'
     }
-  }
 }
-
 </script>
 
 <style scoped>

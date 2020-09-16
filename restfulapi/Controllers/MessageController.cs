@@ -39,7 +39,6 @@ namespace restfulapi.Controllers
                     message.Id = Guid.NewGuid();
                     message.Read = false;
                     message.TimeSent = DateTimeOffset.Now;
-
                     results.Success = await _messageService.SendMessage(message);
                     results.Values = results.Success;
                 }
@@ -56,7 +55,7 @@ namespace restfulapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> GetUserMessages([FromQuery] Guid user_id, [FromQuery]Guid contact_id)
         {
-            var results = new GenericReturnObject<ConversationDTO>();
+            var results = new GenericReturnObject<List<ConversationDTO>>();
             try
             {
                 if (user_id == Guid.Empty)
@@ -71,7 +70,8 @@ namespace restfulapi.Controllers
                     results.Success = false;
                     return BadRequest(results);
                 }
-                var messages = await _messageService.GetMessageList(user_id, contact_id);
+                results.Success = true;
+                results.Values = await _messageService.GetMessageList(user_id, contact_id);
             }
             catch (Exception ex)
             {

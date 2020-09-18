@@ -3,9 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueSignalR from '@latelier/vue-signalr'
 
 Vue.config.productionTip = false
-/* eslint-disable no-new */
+Vue.use(VueSignalR, 'https://localhost:44359/message-hub')
+
 new Vue({
   el: '#app',
   router,

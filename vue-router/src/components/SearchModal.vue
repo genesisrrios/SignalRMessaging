@@ -23,13 +23,15 @@
       </div>
     </div>
   </div>
- </div>
+  </div>
 </template>
 
 <script>
 import mixins from '../mixins.js'
 import axios from 'axios'
 import vSelect from 'vue-select'
+import "vue-select/dist/vue-select.css"
+
 import { EventBus } from '../event-bus.js'
 
 export default {

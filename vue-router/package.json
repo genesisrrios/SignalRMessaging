@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@latelier/vue-signalr": "^2.0.4",
     "@popperjs/core": "^2.4.2",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Domain.Services;
 using Domain.Service;
 using AutoMapper;
+using Restfulapi.Hubs;
 
 namespace restfulapi
 {
@@ -40,13 +41,17 @@ namespace restfulapi
                     {
                         options.WithOrigins("https://localhost:8080")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+
                         options.WithOrigins("http://localhost:8080")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                     });
                 });
             services.AddAutoMapper(typeof(Startup).Assembly);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +71,7 @@ namespace restfulapi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessageHub>("/message-hub");
             });
         }
     }

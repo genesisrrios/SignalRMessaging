@@ -62,7 +62,7 @@ namespace Domain.Services
 
                     results.AddRange(messagesTo);
                     results.AddRange(messagesFrom);
-                    results = results.OrderByDescending(x => x.TimeSent).ToList();
+                    results = results.OrderBy(x => x.TimeSent).ToList();
                 }
             }
             catch (Exception ex)

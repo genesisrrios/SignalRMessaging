@@ -45,7 +45,7 @@ img{ max-width:100%;}
 .top_spac{ margin: 20px 0 0;}
 
 
-.recent_heading {float: left; width:40%;}
+.recent_heading {float: left;}
 .srch_bar {
   display: inline-block;
   text-align: right;
@@ -87,7 +87,7 @@ img{ max-width:100%;}
   margin: 0;
   padding: 18px 16px 10px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
+.inbox_chat { height: 550px; overflow-y: scroll; min-height: 550px;}
 
 .active_chat{ background:#ebebeb;}
 
@@ -163,5 +163,6 @@ img{ max-width:100%;}
 .msg_history {
   height: 516px;
   overflow-y: auto;
+  min-height: 516px;
 }
 </style>

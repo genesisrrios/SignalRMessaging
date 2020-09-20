@@ -1,49 +1,26 @@
 <template>
   <div class="mesgs">
   <div class="msg_history">
-    <div class="incoming_msg">
-      <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-      <div class="received_msg">
-        <div class="received_withd_msg">
-          <p>Test which is a new approach to have all
-            solutions</p>
-          <span class="time_date"> 11:01 AM    |    June 9</span></div>
+    <div v-for="message in messageList" v-bind:key="message.id">
+      <div class="incoming_msg" v-if="!message.sent_by_me">
+        <div class="incoming_msg_img"> <img v-bind:src="require(`../assets/${message.profile_picture}`)" alt="profile picture"></div>
+        <div class="received_msg">
+          <div class="received_withd_msg">
+            <p>{{message.message}}</p>
+            <span class="time_date">{{message.time_sent}}</span></div>
+        </div>
       </div>
-    </div>
-    <div class="outgoing_msg">
-      <div class="sent_msg">
-        <p>Test which is a new approach to have all
-          solutions</p>
-        <span class="time_date"> 11:01 AM    |    June 9</span> </div>
-    </div>
-    <div class="incoming_msg">
-      <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-      <div class="received_msg">
-        <div class="received_withd_msg">
-          <p>Test, which is a new approach to have</p>
-          <span class="time_date"> 11:01 AM    |    Yesterday</span></div>
-      </div>
-    </div>
-    <div class="outgoing_msg">
-      <div class="sent_msg">
-        <p>Apollo University, Delhi, India Test</p>
-        <span class="time_date"> 11:01 AM    |    Today</span> </div>
-    </div>
-    <div class="incoming_msg">
-      <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-      <div class="received_msg">
-        <div class="received_withd_msg">
-          <p>We work directly with our designers and suppliers,
-            and sell direct to you, which means quality, exclusive
-            products, at a price anyone can afford.</p>
-          <span class="time_date"> 11:01 AM    |    Today</span></div>
+      <div class="outgoing_msg" v-else>
+        <div class="sent_msg">
+          <p>{{message.message}}</p>
+          <span class="time_date">{{message.time_sent}}</span> </div>
       </div>
     </div>
   </div>
   <div class="type_msg">
     <div class="input_msg_write">
-      <input type="text" class="write_msg" placeholder="Type a message" />
-      <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+      <input  v-model="message" type="text" class="write_msg" placeholder="Type a message" v-on:keyup.enter="sendMessage" />
+      <button class="msg_send_btn" type="button" v-on:click="sendMessage" v-bind:style="{'background-color':userPrimaryColor}"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
     </div>
   </div>
 </div>
@@ -61,7 +38,8 @@ export default {
     return {
       contactId: null,
       messageList: [],
-      message:null
+      message:null,
+      userPrimaryColor: localStorage.primaryColor
     }
   },
   methods: {
@@ -108,7 +86,7 @@ export default {
       self.getMessages();
     })
     this.$socket.on('ReceiveMessage', (message) => { 
-      if(message.to === localStorage.userId || message.for === localStorage.userId)
+      if(message.to === localStorage.userId || message.from === localStorage.userId)
         self.getMessages()
     });
   },
@@ -118,7 +96,7 @@ export default {
   }
 }
 function StyleMyMessageBubbles () {
-    let messageBubbles = document.getElementsByClassName('sent')
+    let messageBubbles = document.getElementsByClassName('sent_msg')
     for (let i = 0; i < messageBubbles.length; i++) {
       messageBubbles[i].style.backgroundColor = localStorage.primaryColor
       messageBubbles[i].style.borderRadius = '20px'

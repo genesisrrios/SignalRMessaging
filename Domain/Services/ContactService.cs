@@ -54,19 +54,31 @@ namespace Domain.Services
 
                     await contacts.ForEachAsync(async x =>
                      {
-                         var lastMessage = await context.Messages
+                         var lastMessageAndLastMessageDate = await context.Messages
                              .Where(w => w.From == user_id && w.To == x.ContactId)
-                             .Select(m=>m.Content).LastOrDefaultAsync();
+                             .Select(m=> new
+                             {
+                                 m.Content,
+                                 LastMessageDate = m.TimeSent
+                             }).LastOrDefaultAsync();
 
-                         lastMessage = lastMessage?.Substring(0, Math.Min(lastMessage.Length, 100));
+                         var lastMessage = lastMessageAndLastMessageDate?.Content?
+                                .Substring(0, Math.Min(lastMessageAndLastMessageDate.Content.Length, 100));
 
-                         var name = await context.Users.Where(w => w.Id == x.ContactId).Select(s => s.UserName).FirstOrDefaultAsync();
+                         var UserNameAndProfilePicture = await context.Users.Where(w => w.Id == x.ContactId)
+                                .Select(s => new
+                                {
+                                    Name = s.UserName,
+                                    ProfilePicture = s.Icon
+                                }).FirstOrDefaultAsync();
 
                          contactList.Add(new ContactInformationDTO
                          {
                              LastMessage = lastMessage,
                              UserId = x.ContactId,
-                             UserName = name
+                             UserName = UserNameAndProfilePicture.Name,
+                             ProfilePicture = UserNameAndProfilePicture?.ProfilePicture,
+                             LastMessageDate = lastMessageAndLastMessageDate?.LastMessageDate
                          });
 
                      });

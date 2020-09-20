@@ -78,7 +78,7 @@ namespace Domain.Services
                              UserId = x.ContactId,
                              UserName = UserNameAndProfilePicture.Name,
                              ProfilePicture = UserNameAndProfilePicture?.ProfilePicture,
-                             LastMessageDate = lastMessageAndLastMessageDate?.LastMessageDate
+                             LastMessageDate = lastMessageAndLastMessageDate?.LastMessageDate.LocalDateTime.ToString()
                          });
 
                      });

@@ -43,7 +43,7 @@ namespace Domain.Services
                                                 ToId = messages.To,
                                                 SentByMe = true,
                                                 ProfilePicture = users.Icon,
-                                                TimeSent = messages.TimeSent.ToString()
+                                                TimeSent = messages.TimeSent.TimeOfDay.ToString()
                                             }).ToListAsync();
 
                     var messagesFrom = await (from messages in context.Messages
@@ -57,7 +57,7 @@ namespace Domain.Services
                                                 ToId = messages.To,
                                                 SentByMe = false,
                                                 ProfilePicture = users.Icon,
-                                                TimeSent = messages.TimeSent.ToString()
+                                                TimeSent = messages.TimeSent.TimeOfDay.ToString()
                                             }).ToListAsync();
 
                     results.AddRange(messagesTo);

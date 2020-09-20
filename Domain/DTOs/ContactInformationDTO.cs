@@ -16,6 +16,6 @@ namespace Domain.DTOs
         [JsonProperty("profile_picture")]
         public string ProfilePicture { get; set; }
         [JsonProperty("last_message_date")]
-        public DateTimeOffset? LastMessageDate { get; set; }
+        public string LastMessageDate { get; set; }
     }
 }

@@ -63,29 +63,31 @@ export default {
       }
     },
     sendMessage: function () {
-      let parameters = JSON.stringify({
-        from: localStorage.userId,
-        to: this.contactId,
-        content: this.message
-      })
-      axios.post(`${this.apiUrl}api/message/writemessage`, parameters, {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        }})
-        .then(function (response) {
-          if (response.data.success) {
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    }
+      if(this.message){
+          let parameters = JSON.stringify({
+            from: localStorage.userId,
+            to: this.contactId,
+            content: this.message
+          })
+          axios.post(`${this.apiUrl}api/message/writemessage`, parameters, {
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+            }})
+            .then(function (response) {
+              if (response.data.success) {
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }
+      }
   },
   created: function () {
     let self = this
     EventBus.$on('show-contact-messages', function(contactId){
       self.contactId = contactId
-      self.getMessages();
+      self.getMessages()
     })
     this.$socket.on('ReceiveMessage', (message) => { 
       if(message.to === localStorage.userId || message.from === localStorage.userId)
@@ -107,4 +109,77 @@ function StyleMyMessageBubbles () {
 </script>
 
 <style>
+.incoming_msg_img {
+  display: inline-block;
+  width: 6%;
+}
+.received_msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+ }
+ .received_withd_msg p {
+  background: #ebebeb none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #646464;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+.received_withd_msg { width: 57%;}
+.mesgs {
+  float: left;
+  padding: 30px 15px 0 25px;
+  width: 60%;
+}
+ .sent_msg p {
+  background: #05728f none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 0; color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+}
+.outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
+.sent_msg {
+  float: right;
+  width: 46%;
+}
+.input_msg_write input {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 48px;
+  width: 100%;
+}
+
+.type_msg {border-top: 1px solid #c4c4c4;position: relative;}
+.msg_send_btn {
+  background: #05728f none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  height: 33px;
+  position: absolute;
+  right: 0;
+  top: 11px;
+  width: 33px;
+}
+.messaging { padding: 0 0 50px 0;}
+.msg_history {
+  height: 516px;
+  overflow-y: auto;
+  min-height: 516px;
+}
+.time_date {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
 </style>

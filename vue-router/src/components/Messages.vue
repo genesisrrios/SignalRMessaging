@@ -7,14 +7,14 @@
         <div class="received_msg">
           <div class="received_withd_msg">
             <p>{{message.message}}</p>
-            <span class="time_date">{{message.time_sent}}</span>
+            <span class="time_date_received">{{message.time_sent}}</span>
           </div>
         </div>
       </div>
       <div class="outgoing_msg" v-else>
         <div class="sent_msg">
           <p>{{message.message}}</p>
-          <span class="time_date">{{message.time_sent}}</span> 
+          <span class="time_date_sent">{{message.time_sent}}</span> 
         </div>
       </div>
     </div>
@@ -135,12 +135,11 @@ function StyleMyMessageBubbles () {
   width: 60%;
 }
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
-  border-radius: 3px;
+  color: white;
   font-size: 14px;
-  margin: 0; color:#fff;
+  margin: 0;
   padding: 5px 10px 5px 12px;
-  width:100%;
+  width: 100%;
 }
 .outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
 .sent_msg {
@@ -176,10 +175,17 @@ function StyleMyMessageBubbles () {
   overflow-y: auto;
   min-height: 516px;
 }
-.time_date {
+.time_date_received {
   color: #747474;
   display: block;
   font-size: 12px;
   margin: 8px 0 0;
+}
+.time_date_sent {
+  color: white;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+  padding: 5px 10px 5px 12px;
 }
 </style>

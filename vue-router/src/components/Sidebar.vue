@@ -67,7 +67,7 @@ export default {
               self.getContactList()
             }
           }).catch(error => {
-            console.log(error)
+            self.createNewUser()
           })
       } else {
         self.createNewUser()

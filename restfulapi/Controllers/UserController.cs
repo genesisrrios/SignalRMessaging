@@ -16,7 +16,7 @@ using restfulapi.ReturnObjects;
 
 namespace restfulapi.Controllers
 {
-    //I'm keeping this project very simple so im authenticating the user myself and doing everything very simple
+    //I'm keeping this project very simple so im authenticating the user myself
     //No security concerns this time
     [Route("api/user")]
     [EnableCors("_allowFrom")]
@@ -48,6 +48,12 @@ namespace restfulapi.Controllers
                     return BadRequest(results);
                 }
                 var user = await _userService.GetUser(user_id);
+                if(user == default)
+                {
+                    results.Message = "User doesn't exist";
+                    results.Success = false;
+                    return BadRequest(results);
+                }
                 results.Values = _mapper.Map<User, UserDTO>(user);
             }
             catch (Exception ex)
@@ -57,62 +63,6 @@ namespace restfulapi.Controllers
             }
             return Ok(JsonConvert.SerializeObject(results));
         }
-        [HttpGet("getuser/username={username}&password={password}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetUser(string username, string password)
-        {
-            var results = new GenericReturnObject<User>();
-            try
-            {
-                if (String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
-                {
-                    results.Message = "Invalid username or password";
-                    results.Success = false;
-                    return BadRequest(results);
-                }
-                else
-                {
-                    results.Values = _userService.GetUser(username, password);
-                }
-            }
-            catch (Exception ex)
-            {
-                results.Success = false;
-                results.Message = ex.Message;
-            }
-            return Ok(results);
-        }
-        [HttpGet("login/username={username}&password={password}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> LoginUser(string username, string password)
-        {
-            var results = new GenericReturnObject<User>();
-            try
-            {
-                if (String.IsNullOrEmpty(username) || String.IsNullOrEmpty(password))
-                {
-                    results.Message = "Invalid username or password";
-                    results.Success = false;
-                    return BadRequest(results);
-                }
-                else
-                {
-                    var user = _userService.GetUser(username, password);
-                    results.Values = user;
-                    user.LastTimeLogged = DateTimeOffset.Now;
-                    await _userService.UpdateUser(user);
-                }
-            }
-            catch (Exception ex)
-            {
-                results.Success = false;
-                results.Message = ex.Message;
-            }
-            return Ok(results);
-        }
-
         [HttpGet("getnewuser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -135,7 +85,7 @@ namespace restfulapi.Controllers
                     PrimaryColorHex = userColor.Item2,
                     Icon = profilePicture
                 };
-                var dbUser = _userService.GetUser(newUser.UserName, newUser.Password);
+                var dbUser = _userService.GetUser(newUser.UserName);
                 while (dbUser != default)
                 {
                     var retryNewUser = new User
@@ -144,9 +94,10 @@ namespace restfulapi.Controllers
                         LastTimeLogged = DateTimeOffset.Now,
                         Password = Guid.NewGuid().ToString(),
                         UserName = userName,
-                        PrimaryColorHex = userColor.Item2
+                        PrimaryColorHex = userColor.Item2,
+                        Icon = profilePicture
                     };
-                    dbUser = _userService.GetUser(retryNewUser.UserName, retryNewUser.Password);
+                    dbUser = _userService.GetUser(retryNewUser.UserName);
                 }
                 results.Success = await _userService.CreateUser(newUser);
                 results.Values = new UserDTO
@@ -154,7 +105,8 @@ namespace restfulapi.Controllers
                     UserName = newUser.UserName,
                     Id = newUser.Id,
                     LastLogin = newUser.LastTimeLogged.Date.ToShortDateString(),
-                    PrimaryColorHex = userColor.Item2
+                    PrimaryColorHex = userColor.Item2,
+                    Icon = profilePicture
                 };
             }
             catch (Exception ex)
@@ -203,7 +155,7 @@ namespace restfulapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> AddContact([FromBody]Contact contact)
         {
-            var results = new GenericReturnObject<string>();
+            var results = new GenericReturnObject();
             try
             {
                 if (contact.ContactId == Guid.Empty)
@@ -228,17 +180,17 @@ namespace restfulapi.Controllers
                 }
 
                 var contactToAdd = await _userService.GetUserById(contact.ContactId);
-                if (contactToAdd == default && contactToAdd?.Id == contact.ContactId)
+                if (contactToAdd == default)
                 {
                     results.Success = false;
                     results.Message = "Contact doesn't exist";
                     return BadRequest(JsonConvert.SerializeObject(results));
                 }
                 var addContactResults = await _contactService.AddContact(contact);
-                if(!addContactResults.Item1 && addContactResults.Item2 > 0)
+                if(!addContactResults.Item1)
                 {
                     results.Success = false;
-                    results.Message = "";//Error fix later
+                    results.Message = addContactResults.Item2; //Fix later with more legible code
                     return BadRequest(JsonConvert.SerializeObject(results));
                 }
             }

@@ -21,5 +21,8 @@ namespace Domain.DTOs
         public Guid MessageId { get; set; }
         [JsonProperty("sent_by_me")]
         public bool SentByMe { get; set; }
+
+        [JsonIgnoreAttribute]
+        public DateTimeOffset DateTimeSent { get; set; }
     }
 }

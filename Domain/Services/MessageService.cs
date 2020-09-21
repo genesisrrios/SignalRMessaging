@@ -31,38 +31,21 @@ namespace Domain.Services
             {
                 using (var context = new Context())
                 {
-
-                    var messagesTo = await (from messages in context.Messages
-                                            where messages.From == userId && messages.To == contactId
-                                            join users in context.Users on messages.From equals users.Id
-                                            select new ConversationDTO
-                                            {
-                                                Message = messages.Content,
-                                                MessageId = messages.Id,
-                                                FromId = messages.From,
-                                                ToId = messages.To,
-                                                SentByMe = true,
-                                                ProfilePicture = users.Icon,
-                                                TimeSent = messages.TimeSent.DateTime.ToShortTimeString()
-                                            }).ToListAsync();
-
-                    var messagesFrom = await (from messages in context.Messages
-                                            where messages.From == contactId && messages.To == userId
-                                            join users in context.Users on messages.From equals users.Id
-                                            select new ConversationDTO
-                                            {
-                                                Message = messages.Content,
-                                                MessageId = messages.Id,
-                                                FromId = messages.From,
-                                                ToId = messages.To,
-                                                SentByMe = false,
-                                                ProfilePicture = users.Icon,
-                                                TimeSent = messages.TimeSent.DateTime.ToShortTimeString()
-                                            }).ToListAsync();
-
-                    results.AddRange(messagesTo);
-                    results.AddRange(messagesFrom);
-                    results = results.OrderBy(x => x.TimeSent).ToList();
+                    results = await (from messages in context.Messages
+                                             where messages.From == userId && messages.To == contactId
+                                             || messages.From == contactId && messages.To == userId
+                                             join users in context.Users on messages.From equals users.Id
+                                             select new ConversationDTO
+                                             {
+                                                 Message = messages.Content,
+                                                 MessageId = messages.Id,
+                                                 FromId = messages.From,
+                                                 ToId = messages.To,
+                                                 SentByMe = messages.From == userId,
+                                                 ProfilePicture = users.Icon,
+                                                 TimeSent = messages.TimeSent.DateTime.ToShortTimeString(),
+                                                 DateTimeSent = messages.TimeSent
+                                             }).OrderBy(x=>x.TimeSent).ToListAsync();
                 }
             }
             catch (Exception ex)

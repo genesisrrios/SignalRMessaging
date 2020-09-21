@@ -14,14 +14,14 @@ public class UserService
     public UserService()
     {
     }
-    public User GetUser(string username,string password)
+    public User GetUser(string username)
     {
         var user = new User();
         try
         {
             using (var context = new Context())
             {
-                user = context.Users.Where(x => x.UserName == username && x.Password == password).SingleOrDefault();
+                user = context.Users.Where(x => x.UserName == username).SingleOrDefault();
             }
         }
         catch (Exception ex)

@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace restfulapi.ReturnObjects
 {
-    public class GenericReturnObject<TValue>
+    public class GenericReturnObject<T> : GenericReturnObjectBase where T : class
+    {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, PropertyName = "values")]
+        public T Values { get; set; }
+    }
+    public class GenericReturnObject : GenericReturnObjectBase
+    {
+        public GenericReturnObject() : base() { }
+    }
+    public class GenericReturnObjectBase
     {
         [JsonProperty("message")]
         public string Message { get; set; }
         [JsonProperty("success")]
-        public bool Success { get; set; }
-        [JsonProperty("values")]
-        public TValue Values { get; set; }
+        public bool Success { get; set; } = true;
     }
 }

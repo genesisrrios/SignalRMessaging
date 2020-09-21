@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Domain.DTOs;
 using Domain.HubInterfaces;
 using Domain.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -15,6 +16,7 @@ using Restfulapi.Hubs;
 namespace restfulapi.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("_allowFrom")]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -30,12 +32,12 @@ namespace restfulapi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> WriteMessage([FromBody]Message message)
         {
-            var results = new GenericReturnObject<bool>();
+            var results = new GenericReturnObject();
             try
             {
                 if (String.IsNullOrEmpty(message.Content))
                 {
-                    results.Message = "No content";
+                    results.Message = "Message has no content";
                     results.Success = false;
                     return BadRequest();
                 }
@@ -45,7 +47,6 @@ namespace restfulapi.Controllers
                     message.Read = false;
                     message.TimeSent = DateTimeOffset.Now;
                     results.Success = await _messageService.SendMessage(message);
-                    results.Values = results.Success;
                     if (results.Success)
                         await _messageClient.Clients.All.ReceiveMessage(new MessageReceivedDTO
                         {

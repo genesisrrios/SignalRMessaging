@@ -13,7 +13,7 @@ namespace Domain.Services
 {
     public class ContactService
     {
-        public async Task<(bool, int)> AddContact(Contact contact)
+        public async Task<(bool, string)> AddContact(Contact contact)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace Domain.Services
                     var alreadyContacts = await context.Contacts.Where(x => x.ContactId == contact.ContactId && x.UserId == contact.UserId).AnyAsync();
 
                     if (alreadyContacts)
-                        return (false, 1);
+                        return (false, "Already contacts");
                     
                     context.Contacts.Add(new Contact
                     {
@@ -39,7 +39,7 @@ namespace Domain.Services
             {
 
             }
-            return (true, 0);
+            return (true, "Contact added");
         }
 
         public async Task<List<ContactInformationDTO>> GetUserContacts(Guid user_id)

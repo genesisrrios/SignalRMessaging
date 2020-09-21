@@ -110,5 +110,15 @@ namespace Domain.Helpers
             ImageList.Add("whale-body.svg");
             ImageList.Add("wireless-payment-credit-card-dollar.svg");
         }
+
+        public string ReturnRandomImage()
+        {
+            var random = new Random();
+            var images = new Images();
+            var imagesListCount = ImageList.Count;
+            var imageListIndex = random.Next(0, imagesListCount);
+            var image = images.ImageList[imageListIndex];
+            return image;
+        }
     }
 }

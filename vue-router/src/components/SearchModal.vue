@@ -75,7 +75,7 @@ export default {
         contact_id: this.selectedUserToAdd.code,
         is_blocked: false
       })
-      axios.post(`${this.apiUrl}api/user/addContact`, parameters, {
+      axios.post(`${this.apiUrl}api/contact/addContact`, parameters, {
         headers: {
           'Content-Type': 'application/json; charset=utf-8'
         }})

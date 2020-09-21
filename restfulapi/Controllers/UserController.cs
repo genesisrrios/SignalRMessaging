@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.DTOs;
+using Domain.Helpers;
 using Domain.Models;
 using Domain.Service;
 using Domain.Services;
@@ -24,13 +25,11 @@ namespace restfulapi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
-        private readonly ContactService _contactService;
         private readonly IMapper _mapper;
-        public UserController(UserService userService, IMapper mapper, ContactService contactService)
+        public UserController(UserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
-            _contactService = contactService;
         }
 
         [HttpGet("getuser")]
@@ -69,11 +68,14 @@ namespace restfulapi.Controllers
         public async Task<ActionResult> GetNewUser()
         {
             var results = new GenericReturnObject<UserDTO>();
+            var animals = new AnimalList();
+            var colors = new ColorList();
+            var images = new Images();
             try
             {
-                var userColor = _userService.GenerateUserColor();
-                var userAnimal = _userService.GenerateUserAnimal();
-                var profilePicture = _userService.GetUserImage();
+                var userColor = colors.ReturnRandomColor();
+                var userAnimal = animals.ReturnAnimal();
+                var profilePicture = images.ReturnRandomImage();
 
                 var userName = $"{ userColor.Item1} { userAnimal }";
                 var newUser = new User
@@ -148,58 +150,6 @@ namespace restfulapi.Controllers
                 results.Success = false;
                 results.Message = ex.Message;
             }
-            return Ok(JsonConvert.SerializeObject(results));
-        }
-        [HttpPost("addContact")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> AddContact([FromBody]Contact contact)
-        {
-            var results = new GenericReturnObject();
-            try
-            {
-                if (contact.ContactId == Guid.Empty)
-                {
-                    results.Success = false;
-                    results.Message = "Empty Contact ID";
-                    return BadRequest(JsonConvert.SerializeObject(results));
-                };
-                if (contact.UserId == Guid.Empty)
-                {
-                    results.Success = false;
-                    results.Message = "Empty UserId";
-                    return BadRequest(JsonConvert.SerializeObject(results));
-                };
-
-                var userRequestingToAddContact = await _userService.GetUserById(contact.UserId);
-                if (userRequestingToAddContact == default)
-                {
-                    results.Success = false;
-                    results.Message = "User doesn't exist";
-                    return BadRequest(JsonConvert.SerializeObject(results));
-                }
-
-                var contactToAdd = await _userService.GetUserById(contact.ContactId);
-                if (contactToAdd == default)
-                {
-                    results.Success = false;
-                    results.Message = "Contact doesn't exist";
-                    return BadRequest(JsonConvert.SerializeObject(results));
-                }
-                var addContactResults = await _contactService.AddContact(contact);
-                if(!addContactResults.Item1)
-                {
-                    results.Success = false;
-                    results.Message = addContactResults.Item2; //Fix later with more legible code
-                    return BadRequest(JsonConvert.SerializeObject(results));
-                }
-            }
-            catch (Exception ex)
-            {
-                results.Success = false;
-                results.Message = ex.Message;
-            }
-            results.Success = true;
             return Ok(JsonConvert.SerializeObject(results));
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Helpers
 {
@@ -232,6 +233,15 @@ namespace Domain.Helpers
             Animals.Add("Wren");
             Animals.Add("Yak");
             Animals.Add("Zebra");
+        }
+        public string ReturnAnimal()
+        {
+            var random = new Random();
+            var animalList = new AnimalList();
+            var animalListCount = Animals.Count;
+            var animalListIndex = random.Next(0, animalListCount);
+            var animal = Animals[animalListIndex];
+            return animal;
         }
     }
 }

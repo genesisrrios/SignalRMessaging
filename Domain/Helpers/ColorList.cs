@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Domain.Helpers
@@ -16,6 +17,16 @@ namespace Domain.Helpers
             Colors.Add("Red","#ff6961");
             Colors.Add("Pink","#ff9899");
             Colors.Add("Dim Gray","#3B3638");
+        }
+        public (string, string) ReturnRandomColor()
+        {
+            var random = new Random();
+            var colorList = new ColorList();
+            var colorListCount = colorList.Colors.Count;
+            var colorListIndex = random.Next(0, colorListCount);
+            var colorName = Colors.ElementAt(colorListIndex).Key;
+            var colorHex = Colors.ElementAt(colorListIndex).Value;
+            return (colorName, colorHex);
         }
     }
 }

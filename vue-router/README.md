@@ -1,6 +1,6 @@
 # vue-frontend
 
-> A vue js front end for asp.net api with vue router
+> A vue js front end for asp.net api with vue router I later realized I wouldn't be using the router so I might remove it later.
 
 ## Build Setup
 

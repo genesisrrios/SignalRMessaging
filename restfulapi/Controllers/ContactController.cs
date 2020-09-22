@@ -22,10 +22,8 @@ namespace Restfulapi.Controllers
     {
         private readonly ContactService _contactService;
         private readonly UserService _userService;
-        private readonly IMapper _mapper;
-        public ContactController(IMapper mapper, ContactService contactService,UserService userService)
+        public ContactController(ContactService contactService,UserService userService)
         {
-            _mapper = mapper;
             _contactService = contactService;
             _userService = userService;
         }

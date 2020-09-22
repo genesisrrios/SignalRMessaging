@@ -68,14 +68,11 @@ namespace restfulapi.Controllers
         public async Task<ActionResult> GetNewUser()
         {
             var results = new GenericReturnObject<UserDTO>();
-            var animals = new AnimalList();
-            var colors = new ColorList();
-            var images = new Images();
             try
             {
-                var userColor = colors.ReturnRandomColor();
-                var userAnimal = animals.ReturnAnimal();
-                var profilePicture = images.ReturnRandomImage();
+                var userColor = ColorList.ReturnRandomColor();
+                var userAnimal = AnimalList.ReturnAnimal();
+                var profilePicture = Images.ReturnRandomImage();
 
                 var userName = $"{ userColor.Item1} { userAnimal }";
                 var newUser = new User

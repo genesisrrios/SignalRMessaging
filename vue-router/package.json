@@ -14,7 +14,7 @@
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@latelier/vue-signalr": "^2.0.4",
     "@popperjs/core": "^2.4.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.0",
     "date-fns": "^2.16.1",
     "jquery": "^3.5.1",
